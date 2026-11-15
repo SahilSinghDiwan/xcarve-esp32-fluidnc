@@ -7,10 +7,16 @@
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 IMG="$ROOT/backup/esp32-xcarve-fluidnc-v4.1.1-full.bin"
-PORT=${1:-$(ls /dev/cu.usbserial-* /dev/cu.SLAB_USBtoUART /dev/ttyUSB* 2>/dev/null | head -1)}
+PORT=${1:-}
+if [ -z "$PORT" ]; then
+  for p in /dev/cu.usbserial-* /dev/cu.SLAB_USBtoUART /dev/ttyUSB*; do
+    [ -e "$p" ] && { PORT=$p; break; }
+  done
+fi
 [ -n "$PORT" ] || { echo "No ESP32 serial port found; plug it in or pass the port."; exit 1; }
+echo "Using port $PORT"
 [ -f "$IMG" ] || { echo "Image missing: $IMG (use the rebuild steps in this script's header)"; exit 1; }
-(cd "$ROOT/backup" && shasum -a 256 -c "$(basename "$IMG").sha256")
+(cd "$ROOT" && shasum -a 256 -c "backup/$(basename "$IMG").sha256")
 PIO="$HOME/.platformio/packages/tool-esptoolpy/esptool.py"
 if [ -f "$PIO" ]; then ESPTOOL=("$HOME/.platformio/penv/bin/python" "$PIO"); else ESPTOOL=(esptool.py); fi
 "${ESPTOOL[@]}" --chip esp32 --port "$PORT" --baud 921600 write_flash --flash_mode keep --flash_freq keep --flash_size keep 0x0 "$IMG"
