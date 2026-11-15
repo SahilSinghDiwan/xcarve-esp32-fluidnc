@@ -1,0 +1,108 @@
+# FluidNC config: ESP32-WROOM-32 DevKit -> Arduino CNC Shield (V3 style), Uno removed.
+# Motion numbers copied from the Uno's GRBL 1.1h settings (backup/grbl-settings-2026-11-15.txt).
+# Full pin table + safety notes: ../docs/WIRING.md
+# Shield 5V rail <- ESP32 3V3 (so A4988 logic accepts 3.3 V signals). Never connect ESP32 5V/VIN to the shield.
+#   X step 26 -> D2   Y step 25 -> D3   Z step 33 -> D4
+#   X dir  16 -> D5   Y dir  27 -> D6   Z dir  14 -> D7
+#   Enable 13 -> D8
+#   Limits X 17 -> D9, Y 4 -> D10, Z 22 -> D12 ("SpnEn" header; GRBL 1.1 moved Z limit there)
+#   Spindle PWM 21 -> D11 ("Z+/Z-" header on V3)   Probe 23 -> A5
+#   Hold 36 -> A1 / Start 39 -> A2: input-only pins, need external 10k pull-up to 3.3 V
+
+board: ESP32 DevKit + Uno-style driver shield
+name: X-Carve FluidNC
+
+stepping:
+  engine: RMT
+  idle_ms: 25        # $1=25 (motors release 25 ms after stopping; set 255 to keep them locked)
+  pulse_us: 10       # $0=10
+  dir_delay_us: 1
+  disable_delay_us: 0
+
+axes:
+  shared_stepper_disable_pin: gpio.13
+  x:
+    steps_per_mm: 80.150      # $100
+    max_rate_mm_per_min: 800  # $110
+    acceleration_mm_per_sec2: 10 # $120
+    max_travel_mm: 290        # $130
+    soft_limits: false
+    homing:
+      cycle: 2
+      positive_direction: false
+      mpos_mm: 0
+      feed_mm_per_min: 25
+      seek_mm_per_min: 500
+    motor0:
+      limit_all_pin: gpio.17:low:pu
+      hard_limits: false
+      pulloff_mm: 5
+      standard_stepper:
+        step_pin: gpio.26
+        direction_pin: gpio.16
+  y:
+    steps_per_mm: 80.041      # $101
+    max_rate_mm_per_min: 800  # $111
+    acceleration_mm_per_sec2: 10 # $121
+    max_travel_mm: 320        # $131
+    soft_limits: false
+    homing:
+      cycle: 2
+      positive_direction: false
+      mpos_mm: 0
+      feed_mm_per_min: 25
+      seek_mm_per_min: 500
+    motor0:                   # both Y motors stay on the one Y driver, as on the stock X-Carve
+      limit_all_pin: gpio.4:low:pu
+      hard_limits: false
+      pulloff_mm: 5
+      standard_stepper:
+        step_pin: gpio.25
+        direction_pin: gpio.27
+  z:
+    steps_per_mm: 1505.424    # $102
+    max_rate_mm_per_min: 100  # $112
+    acceleration_mm_per_sec2: 10 # $122
+    max_travel_mm: 80         # $132
+    soft_limits: false
+    homing:
+      cycle: 1
+      positive_direction: true
+      mpos_mm: 0
+      feed_mm_per_min: 25
+      seek_mm_per_min: 100
+    motor0:
+      limit_all_pin: gpio.22:low:pu
+      hard_limits: false
+      pulloff_mm: 5
+      standard_stepper:
+        step_pin: gpio.33
+        direction_pin: gpio.14
+
+start:
+  must_home: false   # GRBL had $22=1 (homing on); set true once switches are verified
+
+probe:
+  pin: gpio.23:low:pu
+
+# control: DISABLED. GPIO 34/36/39 have no internal pull-up; left unwired they float and can
+# fire feed hold / cycle start / $H at random. Uncomment only after adding 10k pull-ups to 3V3.
+# control:
+#   feed_hold_pin: gpio.36:low     # old power-sense / hold button
+#   cycle_start_pin: gpio.39:low
+#   macro0_pin: gpio.34:low        # old pendant button
+
+macros:
+  macro0: $H
+
+PWM:
+  pwm_hz: 1000
+  output_pin: gpio.21
+  enable_pin: NO_PIN
+  direction_pin: NO_PIN
+  disable_with_s0: false
+  s0_with_disable: true
+  spinup_ms: 1000
+  spindown_ms: 1000
+  tool_num: 0
+  speed_map: 0=0.000% 12000=100.000%   # $30=12000, $31=0

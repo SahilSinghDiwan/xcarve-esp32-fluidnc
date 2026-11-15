@@ -1,0 +1,4 @@
+backup/*.img
+fluidnc/release-*/
+.DS_Store
+__pycache__/
