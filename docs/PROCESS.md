@@ -52,7 +52,13 @@ Found while doing this:
 - **USB resets the board.** On macOS, opening the CP2102 port toggles DTR/RTS and resets the ESP32. Use the HTTP command API instead ([`../tools/fluidnc-cmd.sh`](../tools/fluidnc-cmd.sh)).
 - **Control pins were disabled.** GPIO 34/36/39 have no internal pull-ups and would float. The hold/start/macro inputs stay disabled until 10 kΩ pull-ups are fitted.
 
-## 6. Still to do
+## 6. Clean-up
+
+- **Copied before deleting:** useful files from the SD image went into [`../legacy-pi/`](../legacy-pi). The card held no Arduino sketch, `.hex` file or G-code.
+- **Deleted:** the 30 GB SD image and the temporary Docker tool image.
+- **ESP32 backup:** the full 4 MB flash was read and checked against the chip (`verify_flash` OK). [`../tools/restore-esp32.sh`](../tools/restore-esp32.sh) restores it, Wi-Fi included.
+
+## 7. Still to do
 
 1. Get this repo reviewed.
 2. Wire the board per [WIRING.md](WIRING.md), leaving motor power off.

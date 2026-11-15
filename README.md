@@ -18,7 +18,8 @@ The ESP32 does the Uno's motion control and serves its own Wi-Fi control page, w
 | [`docs/PROCESS.md`](docs/PROCESS.md) | Step-by-step log of everything done, and how it was kept non-destructive |
 | [`fluidnc/config.yaml`](fluidnc/config.yaml) | FluidNC machine config (values from the Uno's live `$$`) |
 | [`backup/grbl-settings-2026-11-15.txt`](backup/grbl-settings-2026-11-15.txt) | The Uno's original GRBL settings (source of truth) |
-| [`tools/`](tools) | Scripts for flashing, Wi-Fi setup, config upload, sending commands, SD audit |
+| [`tools/`](tools) | Scripts for flashing, Wi-Fi setup, config upload, sending commands, restore, SD audit |
+| [`legacy-pi/`](legacy-pi) | Small files rescued from the Pi: custom pendant scripts, CNCjs macro, boot config |
 
 ## Try it on your own ESP32 (no machine needed, ~10 min)
 
@@ -47,6 +48,7 @@ Expected result:
 
 ## Not in git
 
-- `backup/rootfs.img`: 30 GB image of the Pi's SD card, kept on the audit machine.
+- `backup/esp32-xcarve-fluidnc-v4.1.1-full.bin`: full flash image of the working ESP32, restored with `tools/restore-esp32.sh`. It's kept off git because it holds Wi-Fi credentials.
+- The Pi's SD card image was deleted on 2026-11-15 after the useful files were copied into `legacy-pi/`.
 - `fluidnc/release-*`: FluidNC downloads, which `tools/flash-fluidnc.sh` fetches again.
 - No Wi-Fi credentials are stored anywhere in this repo.

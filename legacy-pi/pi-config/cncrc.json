@@ -1,0 +1,18 @@
+{
+    "state": {
+        "checkForUpdates": true,
+        "controller": {
+            "exception": {
+                "ignoreErrors": false
+            }
+        }
+    },
+    "macros": [
+        {
+            "id": "49ac5fb8-a5eb-4c4d-857b-6521d5925989",
+            "mtime": 1558782521324,
+            "name": "Go to top left",
+            "content": "G0 X0 Y320"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+[
+  {
+    "name": "cncjs",
+    "pm_exec_path": "/usr/bin/cncjs",
+    "args": ["--port", "8000", "-m", "/tinyweb:/home/pi/tinyweb"],
+    "node_version": "10.15.3"
+  }
+]

@@ -1,7 +1,7 @@
 # X-Carve controller audit → ESP32 replacement
 
 Audited 2026-11-15 from the Pi SD card (read-only; card never mounted or written).
-Backup image: `backup/rootfs.img` (not in git: 30 GB, kept on the audit machine) (read-only, sparse, all allocated blocks, `e2fsck -fn` clean).
+Backup image `rootfs.img` was deleted after the audit; small useful files are in `../legacy-pi/` (read-only, sparse, all allocated blocks, `e2fsck -fn` clean).
 
 ## What the Pi was doing
 
