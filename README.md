@@ -7,7 +7,7 @@ This replaces an X-Carve CNC controller stack with a single ESP32 running [Fluid
 
 The ESP32 does the Uno's motion control and serves its own Wi-Fi control page, which replaces the Pi and CNCjs. Motors, drivers, limit switches, spindle and power supply stay as they are.
 
-> **Status (2026-11-15): reviewed on the bench, not yet tested on the machine.** FluidNC v4.1.1 is flashed on an ESP32 and joined to Wi-Fi, and the machine config loads with no errors. The shield is not wired yet and no motor has moved. This repo is up for review before wiring.
+> **Status (2026-11-15): set up on the bench, not yet tested on the machine.** FluidNC v4.1.1 is flashed on an ESP32 and joined to Wi-Fi, and the machine config loads with no errors. The shield is not wired yet and no motor has moved. This repo is up for review before wiring.
 
 ## Repo map
 
@@ -32,6 +32,8 @@ tools/flash-fluidnc.sh /dev/cu.usbserial-XXXX            # erases the ESP32 and 
 tools/set-wifi.sh /dev/cu.usbserial-XXXX "<your-ssid>"   # asks for the password; hostname becomes xcarve
 tools/upload-config.sh                                   # uploads fluidnc/config.yaml, reboots, prints status
 ```
+
+These four scripts were tested end to end on 2026-11-15 (macOS, ESP32-D0WD-V3 DevKit, CP2102 USB). On Linux, the port is usually `/dev/ttyUSB0`.
 
 Expected result:
 - `<Idle|MPos:0.000,0.000,0.000|...>`

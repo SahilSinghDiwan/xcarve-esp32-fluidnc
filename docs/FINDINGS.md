@@ -24,7 +24,7 @@ Backup image `rootfs.img` was deleted after the audit; small useful files are in
 - Firmware: **FluidNC** on an ESP32-WROOM-32 DevKit. It replaces both boards:
   - motion control (the Uno's job)
   - built-in Wi-Fi web UI with jog, macros, SD-card job running, and a Telnet/USB GRBL port (the Pi's job)
-- **ESP32-S3** also works, but FluidNC's S3 support only arrived in the v4 pre-releases. It's newer and less tested. There's no reason to pay for it here.
+- **ESP32-S3** also works. FluidNC made S3 support stable in v4.1 (Sept 2026), but this machine gains nothing from it, and the classic ESP32 has the longer track record.
 - The old pendant functions map to FluidNC's native `control:` pins: feed hold, cycle start, and `macro0..3` (e.g. `$H`). Power-sense → `feed_hold_pin`.
 - **What you lose:**
   - Easel (needs its own driver on a computer)
@@ -32,11 +32,11 @@ Backup image `rootfs.img` was deleted after the audit; small useful files are in
   - the USB keyboard pendant (the web UI jogs instead)
 - CNCjs can still be used from a laptop: it connects to FluidNC over USB or Telnet.
 
-## Draft config
+## Config
 
 `../fluidnc/config.yaml`: ESP32 DevKit wired to the existing driver shield's step/dir pins. Motion values are copied from the Uno's live settings (`../backup/grbl-settings-2026-11-15.txt`, read 2026-11-15: GRBL 1.1h, variable spindle, homing on).
 
-- **Not stock X-Carve electronics.** Belt axes use 80 steps/mm, which means 1/16 microstepping, so the shield is likely a CNC Shield V3 (A4988/DRV8825). A gShield runs at 1/8. Z is 1505 steps/mm and the machine runs slow: 800 mm/min, 10 mm/s² acceleration.
+- **Not stock X-Carve electronics.** Belt axes use 80 steps/mm, which means 1/16 microstepping, so the shield is a generic Arduino CNC Shield, V3 style, with A4988/DRV8825 drivers (the owner confirmed this). A gShield runs at 1/8. Z is 1505 steps/mm and the machine runs slow: 800 mm/min, 10 mm/s² acceleration.
 - **Uno is OK.** It answered over USB, so the Nov 2025 "not accessible" error just meant it was unplugged from the Pi.
 
 ## ESP32 status (2026-11-15)

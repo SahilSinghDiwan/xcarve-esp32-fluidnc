@@ -8,7 +8,15 @@ PY="$HOME/.platformio/penv/bin/python"; [ -x "$PY" ] || PY=python3   # needs pys
 PORT="$PORT" SSID="$SSID" PASS="$PASS" HOST="$HOST" "$PY" -I - <<'PYEOF'
 import os, serial, time
 s = serial.Serial(os.environ['PORT'], 115200, timeout=0.3)
-time.sleep(4); s.read(65536)          # opening the port resets the ESP32; wait for boot
+# Opening the port resets the ESP32: wait for FluidNC's ready banner (first boot after flashing is slower).
+boot, t = b'', time.time()
+while b'Grbl' not in boot and time.time() - t < 15:
+    boot += s.read(4096)
+if b'Grbl' not in boot:
+    s.write(b'\n'); time.sleep(1); boot += s.read(4096)
+if b'Grbl' not in boot and b'ok' not in boot:
+    raise SystemExit('FluidNC did not answer on ' + os.environ['PORT'] + '. Is it flashed? Try again or replug.')
+time.sleep(0.5); s.read(65536)
 for c in (f"$Sta/SSID={os.environ['SSID']}", f"$Sta/Password={os.environ['PASS']}",
           "$WiFi/Mode=STA", f"$Hostname={os.environ['HOST']}"):
     s.write(c.encode() + b"\n"); time.sleep(0.5)
