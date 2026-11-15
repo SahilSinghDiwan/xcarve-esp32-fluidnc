@@ -43,7 +43,7 @@ Backup image: `backup/rootfs.img` (not in git: 30 GB, kept on the audit machine)
 
 - **Board:** ESP32-D0WD-V3 (rev 3.1) WROOM-32 DevKit, CP2102 USB, 4 MB flash.
 - **Firmware:** FluidNC **v4.1.1** (stable, 2026-09-25), Wi-Fi build. Installer files are in `fluidnc/release-v4.1.1/`. v4.1 also made S3 support stable, but the classic ESP32 is still the pick here.
-- **Wi-Fi:** joined `kreu`. Web UI at http://xcarve.local (192.168.1.115), Telnet on port 23.
+- **Wi-Fi:** joined the workshop Wi-Fi. Web UI at http://xcarve.local (192.168.1.115), Telnet on port 23.
 - **Config:** `../fluidnc/config.yaml` loaded with no errors. Control pins (hold/start/macro) are disabled until pull-ups are wired.
 - **Tip:** opening the USB port resets the board on macOS. Send commands over HTTP instead: `curl -G --data-urlencode 'plain=?' http://xcarve.local/command`.
 - **Next:** wire the board per `WIRING.md`, then bench test.
